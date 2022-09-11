@@ -128,7 +128,7 @@ class LeagueClientAPI:
     # dicionário -> json_str -> bytes(utf-8 str)
     
 
-#x = LeagueClientAPI("63454","riot","dAbtaA1mIUd_DtIA2B6jLg");
+#x = LeagueClientAPI("63454","riot","senhasenhasenhasenha");
 
 
 
