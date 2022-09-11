@@ -1,0 +1,1 @@
+python "C:\Users\B105\Documents\GIT\maracutaias no client do lol\obter_lista_de_baus.py" > saida/baus.txt
