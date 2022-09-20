@@ -16,20 +16,43 @@ class LeagueClientAPI:
             
         )
         
-        resposta = ureq.urlopen(req, context=self.contexto_ssl)
-        return resposta.read()
-    
+        
+        try:
+            resposta = ureq.urlopen(req, context=self.contexto_ssl)
+             
+        except urllib.error.HTTPError as http_err:
+            if http_err.code == 400:
+                print(http_err.read().decode())
+                
+                
+        else:
+            print(resposta.read())
+        
     
     #efetua request e retorna um dicionario
     def efetuar_req(self, req):
-        resposta = ureq.urlopen(req, context=self.contexto_ssl)
         
-        return json.loads(resposta.read())
+        try:
+        
+            resposta = ureq.urlopen(req, context=self.contexto_ssl)
+            body = resposta.read()
+            if body:
+                
+                return json.loads(body)
+                
+            else: 
+                return
+                
+        except urllib.error.HTTPError as http_err:
+            #print("Erro",http_err.getcode(),"\n->",http_err.read().decode())
+            return
+        
+            
     
     
         
     def PUT(self, endpoint, dict_corpo):
-        print(repr(json.dumps(dict_corpo).encode("utf-8")))
+        
         
         req = ureq.Request(
 
@@ -44,14 +67,29 @@ class LeagueClientAPI:
         
         return self.efetuar_req(req)
         
+    def PUT_RAW(self, endpoint, arg):
         
+        
+        req = ureq.Request(
+
+            (self.url + endpoint),    
+            headers=self.default_http_headers,
+            method="PUT",
+            
+            data=arg
+            
+        )
+        
+        
+        return self.efetuar_req(req)    
         
     #requisição delete pode ou não ter corpo
     def DELETE(self, endpoint, dict_corpo=""):
         return
     
-    def POST(self, endpoint, dict_corpo):
-        print(repr(json.dumps(dict_corpo).encode("utf-8")))
+    def POST(self, endpoint, dict_corpo={}):
+        
+        
         
         req = ureq.Request(
 
@@ -77,6 +115,16 @@ class LeagueClientAPI:
         
         return self.efetuar_req(req)
         
+    def PATCH(self, endpoint, dict_corpo):
+        req = ureq.Request(
+
+            (self.url + endpoint),    
+            headers=self.default_http_headers,
+            method="PATCH",
+            data=json.dumps(dict_corpo).encode("utf-8")
+        )
+        
+        return self.efetuar_req(req)    
     
     def __init__(self, porta, usuario, senha, certificado_dir):
     
@@ -108,6 +156,7 @@ class LeagueClientAPI:
                 "Authorization": auth_str,
                 "User-Agent":"curl/7.79.1",
                 "Accept":"*/*"
+
             }
         
 

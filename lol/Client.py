@@ -7,7 +7,8 @@ class Client():
         lockfile_dir = os.path.join(diretorio_raiz_do_lol, "lockfile")
 
         # lockfile não encontrado => client fechado
-        if not os.path.isfile(lockfile_dir): return
+        if not os.path.isfile(lockfile_dir):
+            exit("Erro: O Client do jogo não está aberto.")
 
         #lockfile encontrado
         arq = open(lockfile_dir, "r")
